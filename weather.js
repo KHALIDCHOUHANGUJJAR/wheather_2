@@ -6,7 +6,7 @@ const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const weatherIcon = document.querySelector(".weather-icon")
 let body = document.querySelector('body')
-
+let card = document.querySelector('.card')
 
 function checkWeather() {
     if (searchBox.value.trim() === "") {
@@ -22,6 +22,7 @@ function checkWeather() {
             })
             .catch((err) => {
                 weather.innerHTML = `<img src="./images/6167023.webp" class="not_found">`;
+                body.classList.remove('thunderstorms', 'drizzle', 'rain', 'snow', 'cloudy', 'clouds', 'sun');
                 // console.log(err);
             });
     }
@@ -41,25 +42,48 @@ function checkWeather() {
      if (id >= 200 && id <= 232) {
          img = './images/scattered-thunderstorms.png';
          body.classList.add('thunderstorms');
-     } else if (id >= 300 && id <= 321) {
+         card.classList.add('thunderstorms');
+         card.classList.remove('sun');
+
+        } else if (id >= 300 && id <= 321) {
          img = './images/drizzle.png';
          body.classList.add('drizzle');
+         card.classList.add('drizzle');
+         card.classList.remove('sun');
+
      } else if (id >= 500 && id <= 531) {
          img = './images/rain.png';
          body.classList.add('rain');
-     } else if (id >= 600 && id <= 622) {
+         card.classList.add('rain');
+         card.classList.remove('sun');
+         
+         card.classList.remove('sun');
+ 
+        } else if (id >= 600 && id <= 622) {
          img = './images/snow.png';
          body.classList.add('snow');
-     } else if (id >= 701 && id <= 781) {
+         card.classList.add('snow');
+         card.classList.remove('sun');
+ 
+        } else if (id >= 701 && id <= 781) {
          img = './images/cloudy.png';
          body.classList.add('cloudy');
-     } else if (id >= 801 && id <= 804) {
+         card.classList.add('cloudy');
+         card.classList.remove('sun');
+
+        } else if (id >= 801 && id <= 804) {
          img = './images/clouds.png';
          body.classList.add('clouds');
-     } else {
+         card.classList.add('clouds');
+         card.classList.remove('sun');
+
+
+        } else {
          img = './images/clear.png';
          body.classList.add('sun');
-     }
+         card.classList.add('sun');
+ 
+        }
  
    
 weather.innerHTML = `
@@ -101,6 +125,8 @@ function getCurrentLocation() {
         (error) => {
             const { message } = error;
             box.innerHTML = `<p class="Error">${message}</p>`;
+            body.classList.remove('thunderstorms', 'drizzle', 'rain', 'snow', 'cloudy', 'clouds', 'sun');
+            card.classList.remove('thunderstorms', 'drizzle', 'rain', 'snow', 'cloudy', 'clouds', 'sun');
         }
     );
 }
