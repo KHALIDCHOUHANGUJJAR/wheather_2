@@ -1,77 +1,119 @@
-// const apiKey = "db73d6cbbee4957d21c10c25681d6567";
-// const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
 
-// const searchBox = document.querySelector(".search input")
-// const searchBtn = document.querySelector(".search button ")
-
-// async function checkWeather(city){
-//     const Response = await  fetch (apiUrl + city + `&appid=${apiKey}`);
-//     var data = await Response.json();
-    
-//     console.log(data);
-    
-//    document.querySelector(".city").innerHTML =  data.name;
-//     document.querySelector(".tem").innerHTML = Math.round(data.main.temp) + "°c"
-//     document.querySelector(".humidity").innerHTML =  data.main.humidity + 
-//     "%"; 
-//    document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
-
-// }
-// searchBtn.addEventListener("click", () => {
-//     checkWeather();
-// })
 
 const apiKey = "db73d6cbbee4957d21c10c25681d6567";
-const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=      ";
-
+let weather = document.querySelector('.weather')
 const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const weatherIcon = document.querySelector(".weather-icon")
-
-async function checkWeather(city){
-    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
-    
-    if(response.status === 404){
-
-        document.querySelector(".error").style.display = "block";
-         document.querySelector(".weather").style.display ="none";
-          
-    }else{
-// paste
-   var data = await response.json();
-    
-
-    
-document.querySelector(".city").innerHTML = data.name;
-document.querySelector(".tem").innerHTML = Math.round(data.main.temp) + "°C";
-document.querySelector(".humidity").innerHTML = data.main.humidity + "%"; 
-document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
- 
-// images of weather
-if (data.weather[0].main == "Clouds"){
-    weatherIcon.src ="images/clouds.png"
-}
-else  if (data.weather[0].main == "Clear"){
-    weatherIcon.src = "images/clear.png";
-}
-else  if (data.weather[0].main == "Rain"){
-    weatherIcon.src = "images/rain.png";
-}
-else  if (data.weather[0].main == "Drizzie"){
-    weatherIcon.src = "images/drizzie.png";
-}
-else  if (data.weather[0].main == "Mist"){
-    weatherIcon.src = "images/mist.png";
-}
+let body = document.querySelector('body')
 
 
-document.querySelector(".weather").style.display ="block"
-document.querySelector(".error").style.display = "none";
-
+function checkWeather() {
+    if (searchBox.value.trim() === "") {
+        weather.innerHTML = `<p class="Error">Please Enter a City name</p>`;
+    } else {
+        weather.innerHTML = `<p>Loading...</p>`;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchBox.value}&units=metric&appid=${apiKey}`;
+        fetch(apiUrl)
+            .then((res) => res.json())
+            .then((data) => {
+                // console.log(data);
+                weatherShow(data);
+            })
+            .catch((err) => {
+                weather.innerHTML = `<img src="./images/6167023.webp" class="not_found">`;
+                // console.log(err);
+            });
     }
+    searchBox.value = '';
 }
+
+   const weatherShow=(data)=>{
+    
+    const { country } = data.sys;
+    const { temp } = data.main;
+    let upTemp = Math.floor(temp);
+    let { main, id } = data.weather[0];
+     let img;
+     
+     body.classList.remove('thunderstorms', 'drizzle', 'rain', 'snow', 'cloudy', 'clouds', 'sun');
+
+     if (id >= 200 && id <= 232) {
+         img = './images/scattered-thunderstorms.png';
+         body.classList.add('thunderstorms');
+     } else if (id >= 300 && id <= 321) {
+         img = './images/drizzle.png';
+         body.classList.add('drizzle');
+     } else if (id >= 500 && id <= 531) {
+         img = './images/rain.png';
+         body.classList.add('rain');
+     } else if (id >= 600 && id <= 622) {
+         img = './images/snow.png';
+         body.classList.add('snow');
+     } else if (id >= 701 && id <= 781) {
+         img = './images/cloudy.png';
+         body.classList.add('cloudy');
+     } else if (id >= 801 && id <= 804) {
+         img = './images/clouds.png';
+         body.classList.add('clouds');
+     } else {
+         img = './images/clear.png';
+         body.classList.add('sun');
+     }
+ 
+   
+weather.innerHTML = `
+<img src="${img}" alt="" class="weather-icon" />
+<h2 class="city">${data.name}, ${country}</h2>
+<h1 class="temp">${upTemp}°C</h1>
+<div class="details">
+    <div class="col">
+        <img src="./images/humidity.png" />
+        <div>
+            <p class="humidity">${data.main.humidity}%</p>
+            <div>Humidity</div>
+        </div>
+    </div>
+    <div class="col">
+        <img src="./images/wind.png" />
+        <div>
+            <p class="wind">${data.wind.speed} m/s</p>
+            <div>Wind Speed</div>
+        </div>
+    </div>
+</div>
+`  
+}
+function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            let lon = position.coords.longitude;
+            let lat = position.coords.latitude;
+            let Currenturl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+            fetch(Currenturl)
+                .then((res) => res.json())
+                .then((data) => weatherShow(data))
+                .catch((err) => {
+                    weather.innerHTML = `<img src="./images/6167023.webp" class="not_found"/>`;
+                    // console.log(err);
+                });
+        },
+        (error) => {
+            const { message } = error;
+            box.innerHTML = `<p class="Error">${message}</p>`;
+        }
+    );
+}
+
 
 searchBtn.addEventListener("click", () => {
-    const city = searchBox.value;
-    checkWeather(city);
+let sec = searchBox.value  
+    checkWeather();
+
 });
+searchBox.addEventListener("keyup",(e)=>{
+ let srch = searchBox.value
+    if (e.key === "Enter") {
+        checkWeather(srch)        
+    }
+})
