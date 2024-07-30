@@ -166,7 +166,7 @@ body {
 @media (max-width: 480px) {
   .card {
     width: 70vw;
-    height: 85vh;
+    height: 80vh;
     box-shadow: -2px 4px 8px 5px #00feab;
     padding: 20px 15px;
   }
@@ -178,17 +178,17 @@ body {
   }
   .search input {
     border-radius: 5px;
-    height: 21px;
+    height: 35px;
   }
 
   .location {
     width: 55vw;
-    height: 3vh;
+    height: 5vh;
   }
   .search button {
     border-radius: 5px;
-    height: 21px;
-    width: 8vw;
+    height: 34px;
+    width: 12vw;
   }
   .details {
     padding: 0 5px;
@@ -217,7 +217,7 @@ body {
   background-position: center;
 }
 .rain{
-  background-image: url(./images/01-15-42-612_512.webp.crdownload);
+  background-image: url(./images/E3K8.gif);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;}

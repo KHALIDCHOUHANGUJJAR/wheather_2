@@ -36,7 +36,7 @@ function checkWeather() {
     let upTemp = Math.floor(temp);
     let { main, id } = data.weather[0];
      let img;
-     
+     let date = new Date().toDateString(); 
      body.classList.remove('thunderstorms', 'drizzle', 'rain', 'snow', 'cloudy', 'clouds', 'sun');
 
      if (id >= 200 && id <= 232) {
@@ -90,6 +90,7 @@ weather.innerHTML = `
 <img src="${img}" alt="" class="weather-icon" />
 <h2 class="city">${data.name}, ${country}</h2>
 <h1 class="temp">${upTemp}°C</h1>
+  <p class="time">${date}</p>
 <div class="details">
     <div class="col">
         <img src="./images/humidity.png" />
